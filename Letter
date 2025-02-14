@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Function Plot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #fce4ec;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .box {
+            width: 420px;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            word-wrap: break-word;
+        }
+        .chart-box {
+            width: 420px;
+            height: 420px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .formula-box {
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1.5; /* This ensures proper line spacing */
+            height: auto; /* Let the box expand as needed */
+            padding: 10px;
+            overflow-wrap: break-word; /* Allow formula to wrap within the box */
+            word-wrap: break-word; /* Handle long words better */
+            white-space: normal; /* Allow normal line breaks */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Happy Valentine's Day</h2>
+
+        <!-- Formula Box -->
+        <div class="box formula-box">
+            <p>
+                \( x = 16\sin^3(t) \)  
+                <br>
+                \( y = 13\cos(t) - 5\cos(2t) - 2\cos(3t) - \cos(4t) \)
+            </p>
+        </div>
+
+        <!-- Confined Graph Box -->
+        <div class="chart-box">
+            <canvas id="heartChart" width="400" height="400"></canvas>
+        </div>
+
+        <!-- Static Text Box -->
+        <div class="box">
+            	<p><strong>Dear Vanessa:</strong> 
+		<br>
+		<br>
+		From all the adventures and activities to leaving small notes to each others living spaces and to even the times we are crying together. Every shared moment we have experienced, they have been immensely meaningful to me and wish them to never end!
+		<br>
+		<br>
+		There have been so many times that I am on a walk and I just notice myself not being able to stop smiling. The first time this happened was on our first date as you left to attend the conference and I went for a walk in meanwhile. I am so incredibly happy that I keep finding myself in a situation where I'm so happy that I have met you!  ❤️
+		</p>
+        </div>
+    </div>
+
+    <script>
+        // Generate heart curve points
+        function generateHeartPoints() {
+            let points = { x: [], y: [] };
+            for (let t = 0; t <= Math.PI * 2; t += 0.01) {
+                let x = 16 * Math.pow(Math.sin(t), 3);
+                let y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+                points.x.push(x);
+                points.y.push(y);
+            }
+            return points;
+        }
+
+        let heartData = generateHeartPoints();
+
+        // Plot using Chart.js
+        const ctx = document.getElementById('heartChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Heart Curve',
+                    data: heartData.x.map((x, i) => ({ x: x, y: heartData.y[i] })),
+                    borderColor: 'red',
+                    backgroundColor: 'pink',
+                    showLine: true,
+                    pointRadius: 1
+                }]
+            },
+            options: {
+                responsive: false,  
+                maintainAspectRatio: false,
+                scales: {
+                    x: { type: 'linear', min: -20, max: 20 },
+                    y: { type: 'linear', min: -18, max: 16 }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

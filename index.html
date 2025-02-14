@@ -138,6 +138,18 @@
         canvas.width = canvasSize;
         canvas.height = canvasSize;  // Keep the height the same to maintain a 1:1 aspect ratio
 
+        // Calculate Y axis min/max based on the canvas height
+        const yMin = -18;
+        const yMax = 16;
+        const canvasHeight = canvas.height;
+
+        const yPadding = 20; // Space from top and bottom of the canvas to avoid cropping
+        const plotRange = yMax - yMin;
+
+        // Adjust the range dynamically to avoid overflowing
+        const adjustedYMin = yMin - (plotRange * 0.05); // Add some padding at the bottom
+        const adjustedYMax = yMax + (plotRange * 0.05); // Add some padding at the top
+
         // Plot using Chart.js
         new Chart(ctx, {
             type: 'scatter',
@@ -165,8 +177,8 @@
                     },
                     y: { 
                         type: 'linear', 
-                        min: -18, 
-                        max: 16,
+                        min: adjustedYMin, 
+                        max: adjustedYMax,
                         ticks: { 
                             display: false // Hide y-axis ticks to avoid them extending out of the canvas 
                         }
@@ -176,4 +188,6 @@
         });
     </script>
 </body>
+</html>
+
 </html>

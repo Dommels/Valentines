@@ -12,6 +12,8 @@
             text-align: center;
             font-family: Arial, sans-serif;
             background-color: #fce4ec;
+            margin: 0;
+            padding: 0;
         }
         .container {
             display: flex;
@@ -19,9 +21,11 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            padding: 10px;
         }
         .box {
-            width: 420px;
+            width: 100%;
+            max-width: 420px;
             background: white;
             border-radius: 10px;
             padding: 15px;
@@ -31,10 +35,12 @@
             justify-content: center;
             text-align: center;
             word-wrap: break-word;
+            margin: 10px 0;
         }
         .chart-box {
-            width: 420px;
-            height: 420px;
+            width: 100%;
+            max-width: 420px;
+            height: auto;
             background: white;
             border-radius: 10px;
             padding: 20px;
@@ -42,16 +48,37 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 10px 0;
         }
         .formula-box {
             font-size: 18px;
             font-weight: bold;
-            line-height: 1.5; /* This ensures proper line spacing */
-            height: auto; /* Let the box expand as needed */
+            line-height: 1.5;
+            height: auto;
             padding: 10px;
-            overflow-wrap: break-word; /* Allow formula to wrap within the box */
-            word-wrap: break-word; /* Handle long words better */
-            white-space: normal; /* Allow normal line breaks */
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            white-space: normal;
+            margin: 10px 0;
+        }
+        h2 {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                height: auto;
+                padding: 10px;
+            }
+            .box, .chart-box {
+                max-width: 90%;
+                margin: 10px 0;
+            }
+            h2 {
+                font-size: 20px;
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
@@ -70,7 +97,7 @@
 
         <!-- Confined Graph Box -->
         <div class="chart-box">
-            <canvas id="heartChart" width="400" height="400"></canvas>
+            <canvas id="heartChart"></canvas>
         </div>
 
         <!-- Static Text Box -->
@@ -101,8 +128,17 @@
 
         let heartData = generateHeartPoints();
 
+        // Calculate the size of the canvas based on its container
+        const canvas = document.getElementById('heartChart');
+        const ctx = canvas.getContext('2d');
+        
+        // Get the container's width
+        const containerWidth = document.querySelector('.chart-box').offsetWidth;
+        const canvasSize = containerWidth > 420 ? 420 : containerWidth; // Make sure the canvas size is responsive
+        canvas.width = canvasSize;
+        canvas.height = canvasSize;  // Keep the height the same to maintain a 1:1 aspect ratio
+
         // Plot using Chart.js
-        const ctx = document.getElementById('heartChart').getContext('2d');
         new Chart(ctx, {
             type: 'scatter',
             data: {
@@ -116,11 +152,25 @@
                 }]
             },
             options: {
-                responsive: false,  
-                maintainAspectRatio: false,
+                responsive: true,  
+                maintainAspectRatio: true,  // Maintain aspect ratio
                 scales: {
-                    x: { type: 'linear', min: -20, max: 20 },
-                    y: { type: 'linear', min: -18, max: 16 }
+                    x: { 
+                        type: 'linear', 
+                        min: -20, 
+                        max: 20,
+                        ticks: { 
+                            display: false // Hide x-axis ticks to avoid them extending out of the canvas 
+                        }
+                    },
+                    y: { 
+                        type: 'linear', 
+                        min: -18, 
+                        max: 16,
+                        ticks: { 
+                            display: false // Hide y-axis ticks to avoid them extending out of the canvas 
+                        }
+                    }
                 }
             }
         });

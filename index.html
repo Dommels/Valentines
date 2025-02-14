@@ -60,6 +60,7 @@
             word-wrap: break-word;
             white-space: normal;
             margin: 10px 0;
+            word-break: break-word; /* Break words in case of overflow */
         }
         h2 {
             font-size: 24px;
@@ -78,6 +79,11 @@
             h2 {
                 font-size: 20px;
                 margin: 10px 0;
+            }
+            /* Adjust the formula font size for smaller screens */
+            .formula-box {
+                font-size: 14px;
+                padding: 8px;
             }
         }
     </style>
@@ -128,29 +134,16 @@
 
         let heartData = generateHeartPoints();
 
-        // Calculate the size of the canvas based on its container
+        // Get canvas and container size
         const canvas = document.getElementById('heartChart');
-        const ctx = canvas.getContext('2d');
-        
-        // Get the container's width
         const containerWidth = document.querySelector('.chart-box').offsetWidth;
-        const canvasSize = containerWidth > 420 ? 420 : containerWidth; // Make sure the canvas size is responsive
+        const canvasSize = containerWidth > 420 ? 420 : containerWidth; // Max width for responsiveness
+
         canvas.width = canvasSize;
-        canvas.height = canvasSize;  // Keep the height the same to maintain a 1:1 aspect ratio
+        canvas.height = canvasSize;  // Maintain a square canvas (aspect ratio 1:1)
 
-        // Calculate Y axis min/max based on the canvas height
-        const yMin = -18;
-        const yMax = 16;
-        const canvasHeight = canvas.height;
-
-        const yPadding = 20; // Space from top and bottom of the canvas to avoid cropping
-        const plotRange = yMax - yMin;
-
-        // Adjust the range dynamically to avoid overflowing
-        const adjustedYMin = yMin - (plotRange * 0.05); // Add some padding at the bottom
-        const adjustedYMax = yMax + (plotRange * 0.05); // Add some padding at the top
-
-        // Plot using Chart.js
+        // Plotting the graph using Chart.js
+        const ctx = canvas.getContext('2d');
         new Chart(ctx, {
             type: 'scatter',
             data: {
@@ -164,23 +157,23 @@
                 }]
             },
             options: {
-                responsive: true,  
-                maintainAspectRatio: true,  // Maintain aspect ratio
+                responsive: true,
+                maintainAspectRatio: true,  // Ensure square aspect ratio
                 scales: {
-                    x: { 
-                        type: 'linear', 
-                        min: -20, 
+                    x: {
+                        type: 'linear',
+                        min: -20,
                         max: 20,
-                        ticks: { 
-                            display: false // Hide x-axis ticks to avoid them extending out of the canvas 
+                        ticks: {
+                            display: false // Hide x-axis ticks
                         }
                     },
-                    y: { 
-                        type: 'linear', 
-                        min: adjustedYMin, 
-                        max: adjustedYMax,
-                        ticks: { 
-                            display: false // Hide y-axis ticks to avoid them extending out of the canvas 
+                    y: {
+                        type: 'linear',
+                        min: -18,  // Ensure the y-axis is limited to -18 to 16
+                        max: 16,
+                        ticks: {
+                            display: false // Hide y-axis ticks
                         }
                     }
                 }
@@ -190,4 +183,3 @@
 </body>
 </html>
 
-</html>
